@@ -1,0 +1,110 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "doctors": "Doctors",
+    "labTests": "Lab Tests",
+    "medicines": "Medicines",
+    "bookNow": "Book Now",
+    "switchLang": "हिंदी"
+  },
+  "Footer": {
+    "rights": "All rights reserved. Healthcare Made Simple.",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "FloatingActions": {
+    "call": "Emergency Call",
+    "whatsapp": "WhatsApp Us"
+  },
+  "ServiceCard": {
+    "learnMore": "Learn more"
+  },
+  "DoctorCard": {
+    "exp": "Exp.",
+    "bookAppointment": "Book Appointment"
+  },
+  "HomePage": {
+    "platform": "MedSathi Platform",
+    "heroTitle1": "Healthcare",
+    "heroTitle2": "Made Simple",
+    "heroSubtitle": "Book doctors, lab tests, and medicines easily from the comfort of your home. Everything you need, right when you need it.",
+    "bookDoctor": "Book Doctor",
+    "labTests": "Lab Tests",
+    "medicines": "Medicines",
+    "comprehensiveCare": "Comprehensive Care",
+    "comprehensiveDesc": "Everything you need to manage your health seamlessly in one app.",
+    "serviceDocTitle": "Doctor Appointments",
+    "serviceDocDesc": "Find top doctors across specialties and book video or in-person visits instantly.",
+    "serviceLabTitle": "Diagnostic Tests",
+    "serviceLabDesc": "Book lab tests at home. Safe, hygienic, and quick reporting straight to your app.",
+    "serviceMedTitle": "Medicine Delivery",
+    "serviceMedDesc": "Upload your prescription and get medicines delivered right to your doorstep.",
+    "howItWorks": "How It Works",
+    "step1Title": "Choose Service",
+    "step1Desc": "Select what you need: a doctor, a test, or medical supplies.",
+    "step2Title": "Book Easily",
+    "step2Desc": "Fill out a simple form, pick a slot, and confirm securely.",
+    "step3Title": "Get Care",
+    "step3Desc": "Receive expert care at home or at the clinic without wait times.",
+    "emergencyTitle": "Need urgent help?",
+    "emergencyDesc": "Our emergency support team is available 24/7 to assist you.",
+    "callNow": "Call Now",
+    "whatsappUs": "WhatsApp Us"
+  },
+  "DoctorPage": {
+    "title": "Book an Appointment",
+    "subtitle": "Choose from our panel of expert doctors and specialists.",
+    "bookPrefix": "Book",
+    "patientName": "Patient Name",
+    "namePlaceholder": "Full name",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "+1 (555) 000-0000",
+    "date": "Date",
+    "time": "Time",
+    "confirmButton": "Confirm Appointment",
+    "confirming": "Confirming...",
+    "successMessage": "Appointment booked successfully!"
+  },
+  "LabPage": {
+    "title": "Book a Lab Test",
+    "subtitle": "Accurate testing. Home collection available.",
+    "fullName": "Full Name",
+    "namePlaceholder": "John Doe",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "+1 (555) 000-0000",
+    "selectTest": "Select Test",
+    "selectTestPlaceholder": "Select a diagnostic test",
+    "tests": {
+      "cbc": "Complete Blood Count (CBC)",
+      "lipid": "Lipid Profile",
+      "thyroid": "Thyroid Profile",
+      "diabetes": "HbA1c (Diabetes)",
+      "vitaminD": "Vitamin D",
+      "mri": "MRI Scan",
+      "ct": "CT Scan",
+      "xray": "X-Ray"
+    },
+    "preferredDate": "Preferred Date",
+    "homeCollection": "Home Collection",
+    "homeCollectionDesc": "A technician will come to your address",
+    "bookButton": "Book Lab Test",
+    "processing": "Processing...",
+    "successMessage": "Lab test booked successfully!"
+  },
+  "MedicinePage": {
+    "title": "Order Medicines",
+    "subtitle": "Upload your prescription and we will handle the rest.",
+    "uploadTitle": "Upload Prescription",
+    "clickToChange": "Click to change file",
+    "clickToUpload": "Click to upload or drag and drop",
+    "uploadHelp": "SVG, PNG, JPG or PDF (max. 5MB)",
+    "address": "Delivery Address",
+    "addressPlaceholder": "Enter your full address block...",
+    "phoneNumber": "Contact Number",
+    "phonePlaceholder": "+1 (555) 000-0000",
+    "placeOrder": "Place Order",
+    "processing": "Processing Order...",
+    "errorNoFile": "Please upload a prescription",
+    "successMessage": "Order placed successfully! We'll deliver soon."
+  }
+}
