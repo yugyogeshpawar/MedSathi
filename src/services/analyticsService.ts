@@ -9,9 +9,9 @@ export const getAnalytics = async () => {
   ]);
 
   const allBookings = [
-    ...docs.docs.map(d => ({ ...d.data(), type: 'doctor' })),
-    ...labs.docs.map(d => ({ ...d.data(), type: 'lab' })),
-    ...meds.docs.map(d => ({ ...d.data(), type: 'medicine' }))
+    ...docs.docs.map((d: any) => ({ ...d.data(), type: 'doctor' })),
+    ...labs.docs.map((d: any) => ({ ...d.data(), type: 'lab' })),
+    ...meds.docs.map((d: any) => ({ ...d.data(), type: 'medicine' }))
   ];
 
   const today = new Date().toISOString().split('T')[0];
@@ -48,7 +48,7 @@ export const getAnalytics = async () => {
   }, 0);
 
   const pendingPayouts = payouts.docs
-    .map(d => d.data())
+    .map((d: any) => d.data())
     .filter((p: any) => p.status === 'pending')
     .reduce((acc: number, curr: any) => acc + (curr.payoutAmount || 0), 0);
 

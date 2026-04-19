@@ -33,7 +33,8 @@ export const addPatientHistory = async ({
   doctorName,
   notes = "",
   date,
-  status = "Pending"
+  status = "Pending",
+  rawDetails
 }: {
   patientId: string;
   bookingId: string;

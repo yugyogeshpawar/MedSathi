@@ -60,7 +60,7 @@ export const BookingChart = ({ data }: { data: any[] }) => {
             stroke="#3B82F6" 
             strokeWidth={4} 
             dot={{ r: 6, fill: '#3B82F6', strokeWidth: 2, stroke: '#fff' }} 
-            activeDot={{ r: 10, shadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
+            activeDot={{ r: 10, strokeWidth: 2 }}
           />
         </LineChart>
       </ResponsiveContainer>
