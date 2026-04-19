@@ -2,25 +2,61 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Beaker } from "lucide-react";
+import { Beaker, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { addLabBooking } from "@/services/firebaseService";
 
 export default function LabTestsPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const t = useTranslations("LabPage");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      phone: formData.get("phone") as string,
+      testType: formData.get("testType") as string,
+      homeCollection: formData.get("home-collection") === "on",
+      date: formData.get("date") as string,
+    };
+
+    const res = await addLabBooking(data);
+    setIsLoading(false);
+
+    if (res.success) {
       toast.success(t("successMessage"));
+      setIsSuccess(true);
       (e.target as HTMLFormElement).reset();
-    }, 1500);
+    } else {
+      toast.error("Something went wrong");
+    }
   };
 
   const testKeys = ["cbc", "lipid", "thyroid", "diabetes", "vitaminD", "mri", "ct", "xray"];
+
+  if (isSuccess) {
+    return (
+      <div className="py-24 px-4 max-w-lg mx-auto text-center">
+        <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">{t("successMessage")}</h2>
+        <a 
+          href={`https://wa.me/1234567890?text=Hi,%20I%20just%20booked%20a%20lab%20test!`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="mt-6 inline-block w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg transition-all"
+        >
+          {t("trackWhatsapp")}
+        </a>
+        <button onClick={() => setIsSuccess(false)} className="mt-4 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:underline">
+          Book another test
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
@@ -36,18 +72,18 @@ export default function LabTestsPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("fullName")}</label>
-              <input required type="text" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("namePlaceholder")} />
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("name")}</label>
+              <input required name="name" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("namePlaceholder")} />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("phoneNumber")}</label>
-              <input required type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("phonePlaceholder")} />
+              <input required name="phone" type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("phonePlaceholder")} />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("selectTest")}</label>
-            <select required defaultValue="" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all appearance-none">
+            <select required name="testType" defaultValue="" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all appearance-none">
               <option value="" disabled>{t("selectTestPlaceholder")}</option>
               {testKeys.map(key => (
                 <option key={key} value={key}>{t(`tests.${key}`)}</option>
@@ -57,13 +93,13 @@ export default function LabTestsPage() {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("preferredDate")}</label>
-            <input required type="date" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" />
+            <input required name="date" type="date" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" />
           </div>
 
           <label className="flex items-center gap-3 p-4 border border-primary/20 bg-primary/5 rounded-xl cursor-pointer">
             <div className="relative flex items-start">
               <div className="flex h-6 items-center">
-                <input required id="home-collection" name="home-collection" type="checkbox" className="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary" />
+                <input id="home-collection" name="home-collection" type="checkbox" className="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary" />
               </div>
             </div>
             <div>
@@ -77,7 +113,7 @@ export default function LabTestsPage() {
             disabled={isLoading}
             className="w-full bg-primary hover:bg-primary-hover text-white py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isLoading ? t("processing") : t("bookButton")}
+            {isLoading ? t("submitting") : t("submit")}
           </button>
         </form>
       </div>

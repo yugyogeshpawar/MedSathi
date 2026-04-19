@@ -1,7 +1,9 @@
 import { Link } from "@/routing";
-import { UserPlus, Activity, Pill, ChevronRight, Phone, MessageCircle } from "lucide-react";
+import { ChevronRight, Phone, MessageCircle } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   const t = useTranslations("HomePage");
@@ -9,48 +11,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative px-4 pt-20 pb-28 sm:pt-28 sm:pb-36 overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background"></div>
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-primary/10 blur-3xl opacity-50"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-secondary/10 blur-3xl opacity-50"></div>
-
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6 animate-in slide-in-from-bottom-4 duration-500">
-            <Activity className="w-4 h-4" />
-            <span>{t("platform")}</span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 animate-in slide-in-from-bottom-6 duration-700">
-            {t("heroTitle1")} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t("heroTitle2")}</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-300 mb-10 animate-in slide-in-from-bottom-8 duration-700 delay-100">
-            {t("heroSubtitle")}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in slide-in-from-bottom-10 duration-700 delay-200">
-            <Link
-              href="/doctor"
-              className="w-full sm:w-auto px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 flex items-center justify-center gap-2"
-            >
-              {t("bookDoctor")}
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-            <div className="flex w-full sm:w-auto gap-4">
-              <Link
-                href="/lab-tests"
-                className="w-full sm:w-auto px-6 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary rounded-full font-bold text-lg transition-all shadow-sm hover:shadow-md flex justify-center"
-              >
-                {t("labTests")}
-              </Link>
-              <Link
-                href="/medicines"
-                className="w-full sm:w-auto px-6 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary rounded-full font-bold text-lg transition-all shadow-sm hover:shadow-md flex justify-center"
-              >
-                {t("medicines")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Services Section */}
       <section className="py-20 bg-slate-50 dark:bg-slate-900">
@@ -64,19 +25,31 @@ export default function Home() {
             <ServiceCard
               title={t("serviceDocTitle")}
               description={t("serviceDocDesc")}
-              icon={<UserPlus className="w-8 h-8 text-primary" />}
+              icon={
+                <div className="relative w-full h-48 rounded-xl overflow-hidden bg-primary/5 dark:bg-primary/10 p-4">
+                  <Image src="/images/doctor.png" alt="Doctor" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-contain" />
+                </div>
+              }
               href="/doctor"
             />
             <ServiceCard
               title={t("serviceLabTitle")}
               description={t("serviceLabDesc")}
-              icon={<Activity className="w-8 h-8 text-primary" />}
+              icon={
+                <div className="relative w-full h-48 rounded-xl overflow-hidden bg-primary/5 dark:bg-primary/10 p-4">
+                  <Image src="/images/lab.png" alt="Lab Test" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-contain" />
+                </div>
+              }
               href="/lab-tests"
             />
             <ServiceCard
               title={t("serviceMedTitle")}
               description={t("serviceMedDesc")}
-              icon={<Pill className="w-8 h-8 text-primary" />}
+              icon={
+                <div className="relative w-full h-48 rounded-xl overflow-hidden bg-primary/5 dark:bg-primary/10 p-4">
+                  <Image src="/images/medicine.png" alt="Medicine" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-contain" />
+                </div>
+              }
               href="/medicines"
             />
           </div>

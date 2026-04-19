@@ -53,25 +53,26 @@
   },
   "DoctorPage": {
     "title": "Book an Appointment",
-    "subtitle": "Choose from our panel of expert doctors and specialists.",
+    "subtitle": "Choose from our panel of expert doctors.",
     "bookPrefix": "Book",
-    "patientName": "Patient Name",
+    "name": "Enter your name",
     "namePlaceholder": "Full name",
     "phoneNumber": "Phone Number",
-    "phonePlaceholder": "+1 (555) 000-0000",
+    "phonePlaceholder": "Phone number",
     "date": "Date",
     "time": "Time",
-    "confirmButton": "Confirm Appointment",
-    "confirming": "Confirming...",
-    "successMessage": "Appointment booked successfully!"
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "successMessage": "Request received! We will contact you soon.",
+    "trackWhatsapp": "Track Request on WhatsApp"
   },
   "LabPage": {
-    "title": "Book a Lab Test",
+    "title": "Book Lab Test",
     "subtitle": "Accurate testing. Home collection available.",
-    "fullName": "Full Name",
-    "namePlaceholder": "John Doe",
+    "name": "Enter your name",
+    "namePlaceholder": "Full Name",
     "phoneNumber": "Phone Number",
-    "phonePlaceholder": "+1 (555) 000-0000",
+    "phonePlaceholder": "Phone Number",
     "selectTest": "Select Test",
     "selectTestPlaceholder": "Select a diagnostic test",
     "tests": {
@@ -87,9 +88,10 @@
     "preferredDate": "Preferred Date",
     "homeCollection": "Home Collection",
     "homeCollectionDesc": "A technician will come to your address",
-    "bookButton": "Book Lab Test",
-    "processing": "Processing...",
-    "successMessage": "Lab test booked successfully!"
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "successMessage": "Request received! We will contact you soon.",
+    "trackWhatsapp": "Track Request on WhatsApp"
   },
   "MedicinePage": {
     "title": "Order Medicines",
@@ -98,13 +100,14 @@
     "clickToChange": "Click to change file",
     "clickToUpload": "Click to upload or drag and drop",
     "uploadHelp": "SVG, PNG, JPG or PDF (max. 5MB)",
-    "address": "Delivery Address",
-    "addressPlaceholder": "Enter your full address block...",
-    "phoneNumber": "Contact Number",
-    "phonePlaceholder": "+1 (555) 000-0000",
-    "placeOrder": "Place Order",
-    "processing": "Processing Order...",
+    "address": "Enter Address",
+    "addressPlaceholder": "Enter your full address...",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "Phone number",
+    "submit": "Submit",
+    "submitting": "Submitting...",
     "errorNoFile": "Please upload a prescription",
-    "successMessage": "Order placed successfully! We'll deliver soon."
+    "successMessage": "Request received! We will contact you soon.",
+    "trackWhatsapp": "Track Request on WhatsApp"
   }
 }

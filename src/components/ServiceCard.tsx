@@ -13,7 +13,7 @@ export default function ServiceCard({ title, description, icon, href }: ServiceC
   const t = useTranslations("ServiceCard");
   return (
     <Link href={href as any} className="group flex flex-col bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-slate-100 dark:hover:border-slate-700 hover:-translate-y-1">
-      <div className="bg-primary/5 dark:bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 group-hover:bg-primary/10">
+      <div className="w-full mb-6 group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden">
         {icon}
       </div>
       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-primary transition-colors">{title}</h3>

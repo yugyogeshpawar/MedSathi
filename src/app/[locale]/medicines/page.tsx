@@ -2,36 +2,69 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Pill, UploadCloud, MapPin, Phone } from "lucide-react";
+import { Pill, UploadCloud, MapPin, Phone, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { addMedicineOrder } from "@/services/firebaseService";
 
 export default function MedicinesPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const t = useTranslations("MedicinePage");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFileName(e.target.files[0].name);
+      setFile(e.target.files[0]);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!fileName) {
+    if (!file) {
       toast.error(t("errorNoFile"));
       return;
     }
     
     setIsLoading(true);
-    
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      phone: formData.get("phone") as string,
+      address: formData.get("address") as string,
+      prescriptionFile: file
+    };
+
+    const res = await addMedicineOrder(data);
+    setIsLoading(false);
+
+    if (res.success) {
       toast.success(t("successMessage"));
+      setIsSuccess(true);
       (e.target as HTMLFormElement).reset();
-      setFileName(null);
-    }, 1500);
+      setFile(null);
+    } else {
+      toast.error("Something went wrong");
+    }
   };
+
+  if (isSuccess) {
+    return (
+      <div className="py-24 px-4 max-w-lg mx-auto text-center">
+        <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">{t("successMessage")}</h2>
+        <a 
+          href={`https://wa.me/1234567890?text=Hi,%20I%20just%20ordered%20medicines!`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="mt-6 inline-block w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg transition-all"
+        >
+          {t("trackWhatsapp")}
+        </a>
+        <button onClick={() => setIsSuccess(false)} className="mt-4 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:underline">
+          Order more medicines
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
@@ -56,9 +89,9 @@ export default function MedicinesPage() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
               />
               <UploadCloud className="w-10 h-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
-              {fileName ? (
+              {file ? (
                 <div className="text-center">
-                  <p className="text-primary font-medium">{fileName}</p>
+                  <p className="text-primary font-medium">{file.name}</p>
                   <p className="text-sm text-slate-500 mt-1">{t("clickToChange")}</p>
                 </div>
               ) : (
@@ -75,7 +108,7 @@ export default function MedicinesPage() {
               <MapPin className="w-4 h-4 text-slate-400" />
               {t("address")}
             </label>
-            <textarea required rows={3} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all resize-none" placeholder={t("addressPlaceholder")} />
+            <textarea required name="address" rows={3} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all resize-none" placeholder={t("addressPlaceholder")} />
           </div>
 
           <div>
@@ -83,7 +116,7 @@ export default function MedicinesPage() {
               <Phone className="w-4 h-4 text-slate-400" />
               {t("phoneNumber")}
             </label>
-            <input required type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("phonePlaceholder")} />
+            <input required name="phone" type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" placeholder={t("phonePlaceholder")} />
           </div>
 
           <button 
@@ -91,7 +124,7 @@ export default function MedicinesPage() {
             disabled={isLoading}
             className="w-full bg-primary hover:bg-primary-hover text-white py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
           >
-            {isLoading ? t("processing") : t("placeOrder")}
+            {isLoading ? t("submitting") : t("submit")}
           </button>
         </form>
       </div>
