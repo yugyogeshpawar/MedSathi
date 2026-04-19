@@ -62,7 +62,7 @@ export default function CRMDashboard() {
     const todayStr = new Date().toDateString();
     let today = 0, doctor = 0, lab = 0, medicine = 0;
     
-    data.forEach(d => {
+    data.forEach((d: MergedBooking) => {
       if (new Date(d.createdAtTS).toDateString() === todayStr) today++;
       if (d.type === "doctor") doctor++;
       if (d.type === "lab") lab++;

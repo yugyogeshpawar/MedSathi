@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const snapshot = await adminDb.collection("patients").orderBy("createdAt", "desc").get();
-    const patients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const patients = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     return NextResponse.json({ success: true, data: patients });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

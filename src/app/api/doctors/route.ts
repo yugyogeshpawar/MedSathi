@@ -5,7 +5,7 @@ import { verifyAuth } from "@/lib/verifyAuth";
 export async function GET(req: NextRequest) {
   try {
     const snapshot = await adminDb.collection("doctors").orderBy("createdAt", "desc").get();
-    const doctors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const doctors = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     return NextResponse.json({ success: true, data: doctors });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

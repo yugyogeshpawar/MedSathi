@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     const merged: any[] = [];
 
-    docs.forEach(d => {
+    docs.forEach((d: any) => {
       const data = d.data();
       merged.push({
         id: d.id, type: "doctor", name: data.name, phone: data.phone, date: data.date ? (data.time ? `${data.date} at ${data.time}` : data.date) : "-", status: data.status || "Pending",
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       });
     });
 
-    labs.forEach(l => {
+    labs.forEach((l: any) => {
       const data = l.data();
       merged.push({
         id: l.id, type: "lab", name: data.name, phone: data.phone, date: data.date || "-", status: data.status || "Pending",
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       });
     });
 
-    meds.forEach(m => {
+    meds.forEach((m: any) => {
       const data = m.data();
       merged.push({
         id: m.id, type: "medicine", name: data.name || "-", phone: data.phone, date: "-", status: data.status || "Pending",
