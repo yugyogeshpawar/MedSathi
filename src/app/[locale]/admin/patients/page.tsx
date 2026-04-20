@@ -5,27 +5,43 @@ import AdminSidebarLayout from "@/components/AdminSidebarLayout";
 import { Link } from "@/routing";
 import { Search } from "lucide-react";
 import { secureFetch } from "@/services/firebaseService";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/routing";
+import toast from "react-hot-toast";
 
 export default function PatientsPage() {
+  const { hasPermission, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [patients, setPatients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    secureFetch("/api/patients")
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setPatients(data.data);
-        }
-        setLoading(false);
-      });
-  }, []);
+    if (!authLoading && !hasPermission("patients")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
+
+  useEffect(() => {
+    if (hasPermission("patients")) {
+      secureFetch("/api/patients")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setPatients(data.data);
+          }
+          setLoading(false);
+        });
+    }
+  }, [hasPermission]);
 
   const filtered = patients.filter(p => 
     p.name?.toLowerCase().includes(search.toLowerCase()) || 
     p.phone?.includes(search)
   );
+
+  if (authLoading || !hasPermission("patients")) return null;
 
   return (
     <AdminSidebarLayout activeMenu="Patients">

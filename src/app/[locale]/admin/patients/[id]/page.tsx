@@ -6,8 +6,13 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, Clock, User, Stethoscope, TestTube, Pill } from "lucide-react";
 import { Link } from "@/routing";
 import { secureFetch } from "@/services/firebaseService";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/routing";
+import toast from "react-hot-toast";
 
 export default function PatientDetailPage() {
+  const { hasPermission, loading: authLoading } = useAuth();
+  const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
@@ -15,7 +20,14 @@ export default function PatientDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
+    if (!authLoading && !hasPermission("patients")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
+
+  useEffect(() => {
+    if (!id || !hasPermission("patients")) return;
     secureFetch(`/api/patients/${id}/history`)
       .then(res => res.json())
       .then(data => {
@@ -43,6 +55,8 @@ export default function PatientDetailPage() {
       default: return "bg-slate-100 dark:bg-slate-800";
     }
   };
+
+  if (authLoading || !hasPermission("patients")) return null;
 
   return (
     <AdminSidebarLayout activeMenu="Patients">

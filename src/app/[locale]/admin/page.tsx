@@ -5,8 +5,10 @@ import AdminSidebarLayout from "@/components/AdminSidebarLayout";
 import { getAllBookingsMerged, updateBookingStatus, MergedBooking, secureFetch } from "@/services/firebaseService";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "@/routing";
-import { Search, Filter, Phone, CheckCircle, Clock } from "lucide-react";
+import { Search, Filter, Phone, CheckCircle, Clock, Plus, MessageSquare, Edit3 } from "lucide-react";
 import toast from "react-hot-toast";
+import WhatsAppModal from "@/components/WhatsAppModal";
+import EditBookingModal from "@/components/EditBookingModal";
 
 // @ts-ignore
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -20,6 +22,9 @@ export default function CRMDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
+  
+  const [waModal, setWaModal] = useState<{isOpen: boolean, data: any}>({ isOpen: false, data: null });
+  const [editModal, setEditModal] = useState<{isOpen: boolean, data: any}>({ isOpen: false, data: null });
 
   useEffect(() => {
     if (!loading && !user) {
@@ -87,10 +92,19 @@ export default function CRMDashboard() {
 
   return (
     <AdminSidebarLayout activeMenu="Dashboard">
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold mb-2">Metrics Overview</h1>
-        <p className="text-slate-500">Live analytics running across your active funnels.</p>
-      </div>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-extrabold mb-2">Metrics Overview</h1>
+            <p className="text-slate-500">Live analytics running across your active funnels.</p>
+          </div>
+          <button 
+            onClick={() => router.push("/admin/bookings/new" as any)}
+            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-primary/20 transition-all active:scale-95"
+          >
+            <Plus size={20} />
+            <span>New Booking</span>
+          </button>
+        </div>
 
       {/* Stats Deck */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
@@ -239,15 +253,29 @@ export default function CRMDashboard() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </button>
-                    <a 
-                      href={`https://wa.me/91${row.phone.replace(/\D/g, '')}?text=Hello%20from%20MedSathi.%20We%20are%20reaching%20out%20regarding%20your%20recent%20request.`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center p-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors group"
-                      title="Contact on WhatsApp"
+                    <button 
+                      onClick={() => setEditModal({ isOpen: true, data: row })}
+                      className="inline-flex items-center justify-center p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors group"
+                      title="Edit Booking Details"
                     >
-                      <Phone className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    </a>
+                      <Edit3 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    </button>
+                    <button 
+                      onClick={() => setWaModal({
+                        isOpen: true,
+                        data: {
+                          name: row.name,
+                          phone: row.phone,
+                          date: row.date,
+                          type: row.type,
+                          doctorName: row.raw?.doctorName
+                        }
+                      })}
+                      className="inline-flex items-center justify-center p-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors group"
+                      title="Send WhatsApp Template"
+                    >
+                      <MessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -255,6 +283,23 @@ export default function CRMDashboard() {
           </table>
         </div>
       </div>
+
+      {waModal.data && (
+        <WhatsAppModal 
+          isOpen={waModal.isOpen} 
+          onClose={() => setWaModal({ ...waModal, isOpen: false })} 
+          bookingData={waModal.data} 
+        />
+      )}
+
+      {editModal.data && (
+        <EditBookingModal 
+          isOpen={editModal.isOpen} 
+          onClose={() => setEditModal({ ...editModal, isOpen: false })} 
+          booking={editModal.data} 
+          onSuccess={fetchData}
+        />
+      )}
     </AdminSidebarLayout>
   );
 }

@@ -7,14 +7,27 @@ import { DashboardCards } from "@/components/DashboardCards";
 import { BookingChart, RevenueChart } from "@/components/Charts";
 import { RefreshCcw } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/routing";
 
 export default function AnalyticsDashboard() {
+  const { hasPermission, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAnalytics();
-  }, []);
+    if (!authLoading && !hasPermission("dashboard")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
+
+  useEffect(() => {
+    if (hasPermission("dashboard")) {
+      fetchAnalytics();
+    }
+  }, [hasPermission]);
 
   const fetchAnalytics = async () => {
     setLoading(true);
@@ -32,6 +45,8 @@ export default function AnalyticsDashboard() {
       setLoading(false);
     }
   };
+
+  if (authLoading || !hasPermission("dashboard")) return null;
 
   return (
     <AdminSidebarLayout activeMenu="Dashboard">

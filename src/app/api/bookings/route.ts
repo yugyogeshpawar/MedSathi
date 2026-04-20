@@ -3,6 +3,7 @@ import { adminDb } from "@/lib/firebaseAdmin";
 import { verifyAuth } from "@/lib/verifyAuth";
 import { createOrGetPatient, addPatientHistory } from "@/services/patientService";
 import { bookSlot } from "@/services/availabilityService";
+import { createNotification, logActivity } from "@/services/loggingService";
 
 export async function GET(req: NextRequest) {
   const { uid, error } = await verifyAuth(req);
@@ -100,6 +101,25 @@ export async function POST(req: NextRequest) {
         date: date ? (time ? `${date} at ${time}` : date) : "-",
         status: "Pending",
         rawDetails: data
+      });
+    }
+
+    // Notification for Admins
+    await createNotification(
+      "New Booking Received",
+      `${name || 'A patient'} has booked a ${type} appointment.`,
+      "info"
+    );
+
+    // Activity Log if performed by Admin
+    const auth = await verifyAuth(req);
+    if (auth.uid) {
+      await logActivity({
+        performedBy: { uid: auth.uid, name: auth.name!, role: auth.role! },
+        action: `Manually Created ${type} Booking`,
+        module: "bookings",
+        entityId: docRef.id,
+        details: `Admin booked for ${name} (${phone})`
       });
     }
 

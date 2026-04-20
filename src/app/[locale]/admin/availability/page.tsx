@@ -7,11 +7,15 @@ import "react-calendar/dist/Calendar.css";
 import { Clock, Plus, Trash2, CalendarDays, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { secureFetch } from "@/services/firebaseService";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/routing";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function AvailabilityPage() {
+  const { hasPermission, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [doctorsList, setDoctorsList] = useState<any[]>([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState<string>("");
   const [date, setDate] = useState<Value>(new Date());
@@ -23,6 +27,14 @@ export default function AvailabilityPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!authLoading && !hasPermission("availability")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
+
+  useEffect(() => {
+    if (!hasPermission("availability")) return;
     fetch("/api/doctors")
       .then(res => res.json())
       .then(data => {
@@ -33,7 +45,7 @@ export default function AvailabilityPage() {
   }, []);
 
   useEffect(() => {
-    if (!selectedDoctorId || !date) return;
+    if (!selectedDoctorId || !date || !hasPermission("availability")) return;
     
     setIsLoading(true);
     const dateStr = (date as Date).toISOString().split('T')[0];
@@ -97,6 +109,8 @@ export default function AvailabilityPage() {
     }
   };
 
+  if (authLoading || !hasPermission("availability")) return null;
+
   return (
     <AdminSidebarLayout activeMenu="Availability">
       <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8">
@@ -114,7 +128,7 @@ export default function AvailabilityPage() {
               onChange={e => setSelectedDoctorId(e.target.value)}
             >
               <option value="">-- Choose a doctor --</option>
-              {doctorsList.map(doc => (
+              {doctorsList.map((doc: any) => (
                 <option key={doc.id} value={doc.id}>{doc.name} - {doc.specialty}</option>
               ))}
             </select>

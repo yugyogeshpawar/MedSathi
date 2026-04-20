@@ -5,16 +5,29 @@ import AdminSidebarLayout from "@/components/AdminSidebarLayout";
 import { secureFetch } from "@/services/firebaseService";
 import { Search, Filter, CheckCircle, Clock, IndianRupee } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/routing";
 
 export default function PayoutsPage() {
+  const { hasPermission, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [payouts, setPayouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [doctorFilter, setDoctorFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
-    fetchPayouts();
-  }, [statusFilter]);
+    if (!authLoading && !hasPermission("payouts")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
+
+  useEffect(() => {
+    if (hasPermission("payouts")) {
+      fetchPayouts();
+    }
+  }, [statusFilter, hasPermission]);
 
   const fetchPayouts = async () => {
     setLoading(true);
@@ -53,6 +66,8 @@ export default function PayoutsPage() {
     p.doctorName.toLowerCase().includes(doctorFilter.toLowerCase()) ||
     p.bookingId.toLowerCase().includes(doctorFilter.toLowerCase())
   );
+
+  if (authLoading || !hasPermission("payouts")) return null;
 
   return (
     <AdminSidebarLayout activeMenu="Payouts">

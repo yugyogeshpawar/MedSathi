@@ -10,8 +10,15 @@ import { Plus } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function DoctorsDirectoryPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, hasPermission } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !hasPermission("doctors")) {
+      router.push("/admin" as any);
+      toast.error("Access denied");
+    }
+  }, [authLoading, hasPermission, router]);
 
   const [doctors, setDoctors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,8 +48,10 @@ export default function DoctorsDirectoryPage() {
   };
 
   useEffect(() => {
-    loadDoctors();
-  }, [user]);
+    if (hasPermission("doctors")) {
+      loadDoctors();
+    }
+  }, [user, hasPermission]);
 
   const handleSave = async (payload: any) => {
     const token = await (user as any).getIdToken();
@@ -83,7 +92,7 @@ export default function DoctorsDirectoryPage() {
     }
   };
 
-  if (authLoading || !user) return <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900"><div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
+  if (authLoading || !hasPermission("doctors")) return <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900"><div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
 
   return (
     <AdminSidebarLayout activeMenu="Doctors">
